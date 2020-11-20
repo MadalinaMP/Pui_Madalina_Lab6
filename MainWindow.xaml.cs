@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.Entity;
 using System.Data;
+using AutoLotModel;
 
 namespace Pui_Madalina_Lab6
 {
@@ -74,10 +75,9 @@ namespace Pui_Madalina_Lab6
                 {
                     MessageBox.Show(ex.Message);
                 }
+                //...            
             }
-            //...
-            else
-if (action == ActionState.Edit)
+            else if (action == ActionState.Edit)
             {
                 try
                 {
@@ -94,21 +94,32 @@ if (action == ActionState.Edit)
                 customerViewSource.View.Refresh();
                 // pozitionarea pe item-ul curent
                 customerViewSource.View.MoveCurrentTo(customer);
+                //...
             }
-            //...
+            else if (action == ActionState.Delete)
+            {
+                try
+                {
+                    customer = (Customer)customerDataGrid.SelectedItem;
+                    ctx.Customers.Remove(customer);
+                    ctx.SaveChanges();
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                customerViewSource.View.Refresh();
+                //...
+            }
         }
-        else if (action == ActionState.Delete)
-{
-try
-{
-customer = (Customer) customerDataGrid.SelectedItem;
-        ctx.Customers.Remove(customer);
-ctx.SaveChanges();
-}
-catch (DataException ex)
-{
-MessageBox.Show(ex.Message);
-}
-customerViewSource.View.Refresh();
-}
+
+        private void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            customerViewSource.View.MoveCurrentToNext();
+        }
+        private void btnPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            customerViewSource.View.MoveCurrentToPrevious();
+        }
+    }
 }
