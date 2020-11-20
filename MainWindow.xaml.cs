@@ -34,6 +34,7 @@ namespace Pui_Madalina_Lab6
         ActionState action = ActionState.Nothing;
         AutoLotEntitiesModel ctx = new AutoLotEntitiesModel();
         CollectionViewSource customerViewSource;
+        CollectionViewSource customerOrdersViewSource;
         public MainWindow()
         {
             InitializeComponent();
@@ -48,11 +49,22 @@ namespace Pui_Madalina_Lab6
             // customerViewSource.Source = [generic data source]
             customerViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("customerViewSource")));
             customerViewSource.Source = ctx.Customers.Local;
+            customerOrdersViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("customerOrdersViewSource")));
+            customerOrdersViewSource.Source = ctx.Orders.Local;
             ctx.Customers.Load();
+            ctx.Orders.Load();
+            ctx.Inventories.Load();
+            cmbCustomers.ItemsSource = ctx.Customers.Local;
+            cmbCustomers.DisplayMemberPath = "FirstName";
+            cmbCustomers.SelectedValuePath = "CustId";
+            cmbInventory.ItemsSource = ctx.Inventories.Local;
+            cmbInventory.DisplayMemberPath = "Make";
+            cmbInventory.SelectedValuePath = "CarId";
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            Order order = null;
             Customer customer = null;
             if (action == ActionState.New)
             {
